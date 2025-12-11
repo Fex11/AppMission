@@ -1,0 +1,24 @@
+# Utiliser Node standard (pas Alpine) pour éviter les problèmes de watcher
+FROM node:18
+
+WORKDIR /app
+
+# Copier les fichiers de dépendances
+COPY package*.json ./
+RUN npm install
+
+# Installer Nest CLI globalement (optionnel)
+RUN npm install -g @nestjs/cli
+
+# Copier tout le projet
+COPY . .
+
+# Exposer le port
+EXPOSE 3000
+
+# Forcer le polling pour Windows/WSL2
+ENV CHOKIDAR_USEPOLLING=true
+ENV CHOKIDAR_INTERVAL=500
+
+# Lancer ts-node-dev pour hot reload
+CMD ["npx", "ts-node-dev", "--respawn", "--transpile-only", "src/main.ts"]

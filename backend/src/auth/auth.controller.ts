@@ -14,12 +14,12 @@ export class AuthController {
     creer(@Body() dto: CreerUserDto) {
         return this.authService.creer(dto);
     }
-
+    
     @Post("/login")
     login(@Body() signInDto: Record<string, any>) {
         return this.authService.log(signInDto.username,signInDto.password);
     }
-
+    
     @UseGuards(AuthGuard,RolesGuard)
     @Roles(Role.Agent)
     @Get("/test")

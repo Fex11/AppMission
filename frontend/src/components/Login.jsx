@@ -1,21 +1,57 @@
 import { useState } from "react";
 
 export default function Login() {
-    const [email, setEmail] = useState("")
-    const [password , setPassword] = useState("")
-    const [showPassword, setShowPassword] = useState (false)
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
+    const [showPassword, setShowPassword] = useState(false)
     const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
 
-    const handleSubmit = () =>{
+    const handleSubmit = async () => {
         setError('');
+        setLoading(true);
 
-        if(!email || !password){
+        if(!username || !password){
             setError('Veuillez remplir tous les champs.');
+            setLoading(false);
             return;
         }
 
-        console.log('Login:',{email, password});
-        alert('Connexion réussie !');
+        try {
+            // Remplacez cette URL par l'URL de votre backend
+            const response = await fetch('http://localhost:3000/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Erreur de connexion');
+            }
+
+            // Stocker le token JWT dans le state (ou localStorage si nécessaire)
+            console.log('Token reçu:', data);
+            
+            // Exemple: sauvegarder le token
+            // localStorage.setItem('token', data.access_token);
+            
+            alert('Connexion réussie !');
+            
+            // Redirection ou autre action après connexion réussie
+            // window.location.href = '/dashboard';
+            
+        } catch (err) {
+            setError(err.message || 'Erreur lors de la connexion');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const gradientStyle = {
@@ -64,17 +100,18 @@ export default function Login() {
 
                         <div>
                             <div className="mb-3">
-                                <label className="form-label fw-medium">Email</label>
+                                <label className="form-label fw-medium">Nom d'utilisateur</label>
                                 <div className="input-group">
                                     <span className="input-group-text bg-white">
-                                        📧
+                                        👤
                                     </span>
                                     <input
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        placeholder="votre@email.com"
+                                        type="text"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        placeholder="votre_nom_utilisateur"
                                         className="form-control"
+                                        disabled={loading}
                                     />
                                 </div>
                             </div>
@@ -89,14 +126,16 @@ export default function Login() {
                                         type={showPassword ? 'text' : 'password'}
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+                                        onKeyDown={(e) => e.key === 'Enter' && !loading && handleSubmit()}
                                         placeholder="••••••••"
                                         className="form-control"
+                                        disabled={loading}
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
                                         className="btn btn-outline-secondary"
+                                        disabled={loading}
                                     >
                                         {showPassword ? '🙈' : '👁️'}
                                     </button>
@@ -115,33 +154,33 @@ export default function Login() {
                                         type="checkbox" 
                                         className="form-check-input" 
                                         id="remember"
+                                        disabled={loading}
                                     />
                                     <label className="form-check-label text-muted" htmlFor="remember">
                                         Se souvenir de moi
                                     </label>
                                 </div>
-                                <a href="#" className="text-decoration-none fw-medium" style={{color: '#667eea'}}>
-                                    Mot de passe oublié ?
-                                </a>
+                                
                             </div>
 
                             <button
                                 onClick={handleSubmit}
                                 className="btn btn-primary w-100 py-2 fw-semibold"
                                 style={btnStyle}
+                                disabled={loading}
                             >
-                                Se connecter
+                                {loading ? (
+                                    <>
+                                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        Connexion...
+                                    </>
+                                ) : (
+                                    'Se connecter'
+                                )}
                             </button>
                         </div>
 
-                        <div className="text-center mt-4">
-                            <small className="text-muted">
-                                Pas encore de compte ?{' '}
-                                <a href="#" className="text-decoration-none fw-medium" style={{color: '#667eea'}}>
-                                    Contactez l'administrateur
-                                </a>
-                            </small>
-                        </div>
+                        
                     </div>
                 </div>
             </div>

@@ -6,7 +6,7 @@ function App() {
   // 💡 Notez les balises vides <> et </>
   return (
     <> 
-      <Login /> 
+      {/* <Login />  */}
       <AddUserForm/>
     </>
   );

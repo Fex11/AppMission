@@ -6,7 +6,7 @@ const AddUserForm = () => {
     username: '',
     email: '',
     password: '',
-    role: 'Agent', // Valeur par défaut pour le rôle (Agent ou Admin)
+    role: 'agent', // Valeur par défaut pour le rôle (Agent ou Admin)
   });
   
   const [showPassword, setShowPassword] = useState(false);
@@ -32,7 +32,11 @@ const AddUserForm = () => {
     setError('');
     setSuccess('');
     setLoading(true);
-
+    const dataToSend = {
+      ...formData,
+      roles: [formData.role], // on crée un tableau
+    };
+    delete dataToSend.role; // on supprime l'ancien champ
     try {
       // Appel API vers votre backend NestJS
       const response = await fetch('http://localhost:3000/auth/create', {
@@ -42,7 +46,7 @@ const AddUserForm = () => {
           // Si vous avez un token d'authentification, ajoutez-le ici
           // 'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(dataToSend)
       });
 
       const data = await response.json();
@@ -192,8 +196,8 @@ const AddUserForm = () => {
                   onChange={handleChange}
                   disabled={loading}
                 >
-                  <option value="Agent">Agent</option>
-                  <option value="Admin">Administrateur</option>
+                  <option value="agent">Agent</option>
+                  <option value="admin">Administrateur</option>
                 </select>
               </div>
               

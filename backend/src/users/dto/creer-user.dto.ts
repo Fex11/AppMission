@@ -7,6 +7,7 @@ export class CreerUserDto {
   username!: string;
 
   @Transform(({ value }) => value?.trim())
+  @IsNotEmpty()
   @IsString()
   password!: string;
 

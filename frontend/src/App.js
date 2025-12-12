@@ -1,21 +1,27 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { useContext } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
-import Home from './components/home';
-import Navbar from './components/navbar';
-import Test from './components/test';
+import DashboardLayout from './components/DashboardLayout';
+import Login from './components/Login';
+import { AuthContext } from './context/AuthContext';
 
 export default function App() {
+  const { user } = useContext(AuthContext);
+
   return (
     <BrowserRouter>
-      <Navbar />
+      <Routes>
+        {/* Page login */}
+        <Route path="/login" element={<Login />} />
 
-      <div className="container mt-4">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/test" element={<Test />} />
-          <Route path="/profil" element={<Home />} />
-        </Routes>
-      </div>
+        {/* Routes protégées */}
+        <Route
+          path="/*"
+          element={
+            user.isLoggedIn ? <DashboardLayout /> : <Navigate to="/login" />
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 }

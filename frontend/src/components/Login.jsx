@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Login() {
     const [username, setUsername] = useState("")
@@ -6,6 +8,8 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false)
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
+    const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
 
     const handleSubmit = async () => {
         setError('');
@@ -37,15 +41,9 @@ export default function Login() {
             }
 
             // Stocker le token JWT dans le state (ou localStorage si nécessaire)
-            console.log('Token reçu:', data);
+            login(data.access_token,data.username,data.roles);
+            navigate("/home")
             
-            // Exemple: sauvegarder le token
-            // localStorage.setItem('token', data.access_token);
-            
-            alert('Connexion réussie !');
-            
-            // Redirection ou autre action après connexion réussie
-            // window.location.href = '/dashboard';
             
         } catch (err) {
             setError(err.message || 'Erreur lors de la connexion');
@@ -156,9 +154,6 @@ export default function Login() {
                                         id="remember"
                                         disabled={loading}
                                     />
-                                    <label className="form-check-label text-muted" htmlFor="remember">
-                                        Se souvenir de moi
-                                    </label>
                                 </div>
                                 
                             </div>

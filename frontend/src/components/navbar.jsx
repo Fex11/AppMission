@@ -1,8 +1,16 @@
+import { useContext } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 
 export default function Navbar() {
     const navigate = useNavigate();
+    const { logout,user } = useContext(AuthContext);
+
+    const deco = () =>{
+        logout();
+        navigate("/login");
+    }
 
   return (
     <>
@@ -40,12 +48,12 @@ export default function Navbar() {
                 </li>
                 <li className="nav-item">
                     <NavLink
-                        to="/test"
+                        to="/createUser"
                         className={({ isActive }) =>
                             isActive ? "nav-link active" : "nav-link"
                         }
                     >
-                        Test
+                        Creer User
                     </NavLink>
                 </li>
             </ul>
@@ -62,7 +70,7 @@ export default function Navbar() {
                   style={{ cursor: "pointer" }}
                 >
                   <i className="bi bi-person-circle me-2" style={{ fontSize: "20px" }}></i>
-                  Fex
+                  {user.username}
                 </span>
 
                 <ul className="dropdown-menu dropdown-menu-end">
@@ -78,7 +86,7 @@ export default function Navbar() {
                     <li><hr className="dropdown-divider" /></li>
 
                     <li>
-                        <span className="dropdown-item text-danger" style={{ cursor: "pointer" }}>
+                        <span className="dropdown-item text-danger" style={{ cursor: "pointer" }} onClick={deco}>
                         Déconnexion
                         </span>
                     </li>

@@ -26,22 +26,27 @@ export class AuthService {
         return user.save();
     }
 
-    async log(username: string, pass: string): Promise<{ access_token: string }> {
+    async log(username: string, pass: string): Promise<{ access_token: string, username: string, roles: string[],id:string }> {
         const user = await this.usersService.findByusername(username);
         if (!user) {
             throw new UnauthorizedException('Utilisateur introuvable');
         }
-
+    
         const isMatch = await bcrypt.compare(pass, user.password);
         if (!isMatch) {
-            throw new UnauthorizedException("Invalid password");
+            throw new UnauthorizedException("Mot de passe invalide");
         }
-
-        const payload = { sub: user._id, username: user.username, roles: user.roles};
+    
+        const payload = { sub: user._id, username: user.username, roles: user.roles };
+    
         return {
-          access_token: await this.jwtService.signAsync(payload),
+            access_token: await this.jwtService.signAsync(payload),
+            username: user.username,
+            roles: user.roles,
+            id:user._id.toString(),
         };
-      }
+    }
+    
 
 
 

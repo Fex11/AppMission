@@ -1,15 +1,21 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
-import Login from './components/Login.jsx';
-import AddUserForm from './components/AddUserForm.jsx';
+import Home from './components/home';
+import Navbar from './components/navbar';
+import Test from './components/test';
 
-function App() {
-  // 💡 Notez les balises vides <> et </>
+export default function App() {
   return (
-    <> 
-      {/* <Login />  */}
-      <AddUserForm/>
-    </>
+    <BrowserRouter>
+      <Navbar />
+
+      <div className="container mt-4">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/test" element={<Test />} />
+          <Route path="/profil" element={<Home />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
-
-export default App;

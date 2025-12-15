@@ -9,6 +9,8 @@ export const AuthProvider = ({ children }) => {
     roles: [],
   });
 
+  const [loading, setLoading] = useState(true); // nouvel état
+
 
 
   useEffect(() => {
@@ -23,6 +25,7 @@ export const AuthProvider = ({ children }) => {
         roles,
       });
     }
+    setLoading(false);
   }, []);
 
   const login = (token, username, roles ) => {
@@ -48,7 +51,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout,loading }}>
       {children}
     </AuthContext.Provider>
   );

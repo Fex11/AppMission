@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import AddUserForm from "./AddUserForm";
-import Home from "./Home";
-import Navbar from "./Navbar";
+import Home from "./home";
+import Navbar from "./navbar";
 
 export default function DashboardLayout() {
   return (

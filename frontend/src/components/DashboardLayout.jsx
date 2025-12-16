@@ -1,9 +1,11 @@
 import { useContext } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import AddMissionForm from "./AddMissionForm";
 import AddUserForm from "./AddUserForm";
+import EditMissionForm from "./EditMissionForm";
 import Home from "./Home";
-import Navbar from "./Navbar";
+import Navbar from "./navbar";
 
 export default function DashboardLayout() {
   const { user,loading } = useContext(AuthContext);
@@ -22,6 +24,8 @@ export default function DashboardLayout() {
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/createUser" element={<AddUserForm />} />
+          <Route path="/createMission" element={<AddMissionForm />} />
+          <Route path="/editMission" element={<EditMissionForm />} />
         </Routes>
       </div>
     </>

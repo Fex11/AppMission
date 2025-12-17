@@ -4,10 +4,11 @@ import { AuthContext } from "../context/AuthContext";
 import { ErrorContext } from "../context/ErrorContext";
 import AddMissionForm from "./AddMissionForm";
 import AddUserForm from "./AddUserForm";
-import Home from "./Home";
+import Home from "./home";
 import MissionsList from "./MissionList";
 import UpdateMissionForm from "./UpdateMissionForm ";
 import Navbar from "./navbar";
+import UsersList from "./UsersList";
 
 export default function DashboardLayout() {
   const { user,loading } = useContext(AuthContext);
@@ -37,7 +38,7 @@ export default function DashboardLayout() {
           </div>
         </div>
       )}
-
+      
       {success && (
         <div className="container mt-4">
           <div className="alert alert-success alert-dismissible fade show" role="alert">
@@ -56,9 +57,10 @@ export default function DashboardLayout() {
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/createUser" element={<AddUserForm />} />
-          <Route path="/createMission" element={<AddMissionForm />} />
+          <Route path="/users" element={<UsersList />} />
           <Route path="/listMission" element={<MissionsList />} />
-          <Route path="/editMission/:id" element={<UpdateMissionForm />} />
+          <Route path="/createMission" element={<AddMissionForm />} />
+          <Route path="/updateMission/:id" element={<UpdateMissionForm />} />
         </Routes>
       </div>
     </>

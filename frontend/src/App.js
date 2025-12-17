@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 import DashboardLayout from './components/DashboardLayout';
 import Login from './components/Login';
+import UsersList from './components/UsersList';
 
 export default function App() {
   return (

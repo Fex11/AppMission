@@ -14,9 +14,6 @@ export class UsersService {
     }
 
     async findAll(): Promise<User[]> {
-        return this.userModel
-          .find({ roles: { $ne: 'admin' } }) // récupère les users dont roles **ne contient pas** 'admin'
-          .select('-password')                // optionnel : ne pas renvoyer le mot de passe
-          .exec();
-      }
+        return this.userModel.find().exec();
+    }
 }

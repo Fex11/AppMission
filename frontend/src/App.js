@@ -10,7 +10,7 @@ export default function App() {
         {/* Page login */}
         <Route path="/login" element={<Login />} />
 
-        {/* Toutes les autres routes passent par DashboardLayout */}
+        {/* Toutes les autres routes passent par DashboardLayout   */}
         <Route
           path="/*"
           element={<DashboardLayout />}

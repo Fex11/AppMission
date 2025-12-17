@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateMissionDto } from './dto/create-mission.dto';
+import { MissionsGateway } from './missions.gateway';
 import { Mission, MissionDocument } from './schemas/mission.schema';
 
 @Injectable()
@@ -9,10 +10,18 @@ export class MissionsService {
   constructor(
     @InjectModel(Mission.name)
     private missionModel: Model<MissionDocument>,
+    private readonly missionsGateway: MissionsGateway,
   ) {}
 
   async create(createMissionDto: CreateMissionDto): Promise<Mission> {
     const mission = new this.missionModel(createMissionDto);
+
+    this.missionsGateway.notifyUser(
+      mission.assignedTo.toString(),
+      'new-mission',
+      mission,
+    );
+    
     return mission.save(); // ✅ ENREGISTRÉ EN BASE
   }
 

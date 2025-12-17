@@ -9,12 +9,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // Bootstrap JS (bundle inclut Popper)
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { AuthProvider } from './context/AuthContext';
+import { ErrorProvider } from './context/ErrorContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    
     <AuthProvider>
+    <ErrorProvider>
       <App />
+    </ErrorProvider>
     </AuthProvider>
   </React.StrictMode>
 );

@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }) => {
     isLoggedIn: false,
     username: null,
     roles: [],
+    id:""
   });
 
   const [loading, setLoading] = useState(true); // nouvel état
@@ -18,24 +19,28 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem("token");
     const username = localStorage.getItem("username");
     const roles = localStorage.getItem("roles");
+    const id = localStorage.getItem("id");
     if (token) {
       setUser({
         isLoggedIn: true,
         username,
         roles,
+        id
       });
     }
     setLoading(false);
   }, []);
 
-  const login = (token, username, roles ) => {
+  const login = (token, username, roles, id ) => {
     localStorage.setItem("token", token);
     localStorage.setItem("username", username);
     localStorage.setItem("roles", roles);
+    localStorage.setItem("id", id);
     setUser({
       isLoggedIn: true,
       username,
       roles,
+      id
     });
   };
 
@@ -43,10 +48,12 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("roles");
+    localStorage.removeItem("id");
     setUser({
       isLoggedIn: false,
       username: null,
       role: [],
+      id:""
     });
   };
 

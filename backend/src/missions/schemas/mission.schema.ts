@@ -1,48 +1,23 @@
-// src/missions/schemas/mission.schema.ts
+// mission.schema.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { User } from '../../users/schemas/user.schema';
 
 export type MissionDocument = Mission & Document;
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true }) // ajoute createdAt et updatedAt automatiquement
 export class Mission {
   @Prop({ required: true })
-  titre: string;
-
-  @Prop({ required: true })
-  description: string;
-
-  @Prop({ type: Types.ObjectId, ref: 'Agent', required: true })
-  agentAssigne: Types.ObjectId;
-
-  @Prop({ 
-    type: String, 
-    enum: ['en_attente', 'en_cours', 'terminee', 'annulee'],
-    default: 'en_attente'
-  })
-  statut: string;
-
-  @Prop({ required: true })
-  dateDebut: Date;
-
-  @Prop({ required: true })
-  dateFin: Date;
+  title!: string;
 
   @Prop()
-  lieu: string;
+  description?: string;
 
-  @Prop({ 
-    type: String, 
-    enum: ['basse', 'moyenne', 'haute', 'critique'],
-    default: 'moyenne'
-  })
-  priorite: string;
+  @Prop({ default: 'pending', enum: ['pending', 'in_progress', 'completed'] })
+  status!: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  creePar: Types.ObjectId;
-
-  @Prop({ type: [String] })
-  notes: string[];
+  @Prop({ type: Types.ObjectId, ref: User.name })
+  assignedTo!: Types.ObjectId;
 }
 
 export const MissionSchema = SchemaFactory.createForClass(Mission);

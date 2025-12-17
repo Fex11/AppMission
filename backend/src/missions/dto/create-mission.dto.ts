@@ -1,33 +1,19 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsMongoId, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateMissionDto {
+  @IsString()
   @IsNotEmpty()
+  title?: string;
+
   @IsString()
-  titre: string;
+  @IsNotEmpty()
+  description?: string;
 
   @IsNotEmpty()
-  @IsString()
-  description: string;
+  @IsEnum(['pending', 'in_progress', 'completed'])
+  status?: 'pending' | 'in_progress' | 'completed';
 
   @IsNotEmpty()
-  @IsString()
-  agentAssigne: string;
-
-  @IsString()
-  statut: string;
-
-  @IsString()
-  dateDebut: string;
-
-  @IsString()
-  dateFin: string;
-
-  @IsString()
-  lieu: string;
-
-  @IsString()
-  priorite: string;
-
-  @IsString()
-  creePar: string;
+  @IsMongoId()
+  assignedTo?: string; // User._id
 }

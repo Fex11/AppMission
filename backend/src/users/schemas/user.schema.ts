@@ -12,8 +12,9 @@ export class User extends Document {
   @Prop()
   email!: string;
 
-  @Prop()
-  roles!:[];
+  @Prop({ type: [String], default: [] })
+  roles!: string[];
+ 
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -56,6 +56,16 @@ export default function Navbar() {
                         Creer User
                     </NavLink>
                 </li>
+                <li className="nav-item">
+                    <NavLink
+                        to="/listMission"
+                        className={({ isActive }) =>
+                            isActive ? "nav-link active" : "nav-link"
+                        }
+                    >
+                        Missions
+                    </NavLink>
+                </li>
             </ul>
 
             {/* MENU DROITE */}

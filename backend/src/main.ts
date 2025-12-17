@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
@@ -11,6 +12,12 @@ async function bootstrap() {
     credentials: true,
     allowedHeaders: 'Content-Type, Accept, Authorization',
   });
+
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,       // supprime les champs non définis dans le DTO
+    forbidNonWhitelisted: true,
+    transform: true,       // IMPORTANT : transforme le JSON en DTO
+  }));
   
   await app.listen(3000);
 }

@@ -243,30 +243,38 @@ export default function MissionsList() {
                 <td>{m.assignedTo?.username || m.assignedTo}</td>
                 <td>{new Date(m.createdAt).toLocaleString()}</td>
                 <td className="text-end">
-                  <button
-                    className="btn btn-sm btn-outline-warning me-2"
-                    onClick={() => navigate(`/editMission/${m._id}`)}
-                  >
-                    Modifier
-                  </button>
-                  <button
-                    className="btn btn-sm btn-outline-danger me-2"
-                    onClick={() => handleDelete(m._id)}
-                  >
-                    Supprimer
-                  </button>
-                  <button
-                    className="btn btn-sm btn-outline-secondary me-2"
-                    onClick={() => handleStatus(m._id,"debute")}
-                  >
-                    Debuter
-                  </button>
-                  <button
-                    className="btn btn-sm btn-outline-secondary"
-                    onClick={() => handleStatus(m._id,"terminate")}
-                  >
-                    Terminer
-                  </button>
+                  {m.status === "pending" && (
+                    <button
+                      className="btn btn-sm btn-outline-warning me-2"
+                      onClick={() => navigate(`/editMission/${m._id}`)}
+                    >
+                      Modifier
+                    </button>
+                  )}
+                  {m.status === "pending" && (
+                    <button
+                      className="btn btn-sm btn-outline-danger me-2"
+                      onClick={() => handleDelete(m._id)}
+                    >
+                      Supprimer
+                    </button>
+                  )}
+                  {m.status === "pending" && (
+                    <button
+                      className="btn btn-sm btn-outline-secondary me-2"
+                      onClick={() => handleStatus(m._id,"debute")}
+                    >
+                      Debuter
+                    </button>
+                  )}
+                    {m.status === "in_progress" && (
+                    <button
+                      className="btn btn-sm btn-outline-secondary"
+                      onClick={() => handleStatus(m._id,"terminate")}
+                    >
+                      Terminer
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

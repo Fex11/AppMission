@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const UsersList = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUsers();
@@ -11,7 +13,14 @@ const UsersList = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://localhost:3000/users');
+      const token = localStorage.getItem("token"); // récupère le token
+      const response = await fetch('http://localhost:3000/users', {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // envoie le token
+        },
+      });
+      if (!response.ok) throw new Error("Erreur lors du chargement des utilisateurs");
       const data = await response.json();
       setUsers(data);
       setLoading(false);
@@ -20,6 +29,7 @@ const UsersList = () => {
       setLoading(false);
     }
   };
+  
 
   const filteredUsers = users.filter(user => {
     const searchLower = searchTerm.toLowerCase();
@@ -70,15 +80,21 @@ const UsersList = () => {
 
   return (
     <div className="container py-5">
-      {/* Header */}
-      <div className="mb-4">
-        <div className="d-flex align-items-center mb-2">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <div className="d-flex align-items-center">
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-people-fill text-primary me-2" viewBox="0 0 16 16">
             <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
           </svg>
           <h1 className="mb-0">Gestion des Utilisateurs</h1>
         </div>
-        <p className="text-muted">Liste complète des utilisateurs enregistrés</p>
+
+        {/* Bouton Ajouter */}
+        <button
+          className="btn btn-primary mt-3"
+          onClick={() => navigate("/createUser")} // Assure-toi que la route existe
+        >
+          + Ajouter un utilisateur
+        </button>
       </div>
 
       {/* Search Bar */}

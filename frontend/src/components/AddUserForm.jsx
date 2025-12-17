@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ErrorContext } from '../context/ErrorContext';
 
 const AddUserForm = () => {
   // 1. Initialisation de l'état du formulaire
@@ -8,11 +10,11 @@ const AddUserForm = () => {
     password: '',
     role: 'agent', // Valeur par défaut pour le rôle (Agent ou Admin)
   });
+  const navigate = useNavigate();
   
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const { showError, showSuccess } = useContext(ErrorContext);
   
   // 2. Gestion des changements dans les champs du formulaire
   const handleChange = (e) => {
@@ -21,16 +23,11 @@ const AddUserForm = () => {
       ...prevData,
       [name]: value,
     }));
-    // Réinitialiser les messages d'erreur/succès lors de la modification
-    setError('');
-    setSuccess('');
   };
 
   // 3. Gestion de la soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
     setLoading(true);
     const dataToSend = {
       ...formData,
@@ -56,8 +53,7 @@ const AddUserForm = () => {
       }
 
       // Succès
-      console.log('Utilisateur créé avec succès :', data);
-      setSuccess(`Utilisateur ${formData.username} créé avec succès !`);
+      showSuccess(`Utilisateur ${formData.username} créé avec succès !`);
       
       // Réinitialisation du formulaire après soumission
       setFormData({
@@ -67,9 +63,10 @@ const AddUserForm = () => {
         role: 'Agent',
       });
 
+      navigate("/users")
+
     } catch (err) {
-      console.error('Erreur:', err);
-      setError(err.message || 'Une erreur est survenue lors de la création de l\'utilisateur');
+      showError(err.message || 'Une erreur est survenue lors de la création de l\'utilisateur');
     } finally {
       setLoading(false);
     }
@@ -89,32 +86,6 @@ const AddUserForm = () => {
           </div>
           <div className="card-body">
             <div>
-              
-              {/* Messages d'erreur et de succès */}
-              {error && (
-                <div className="alert alert-danger alert-dismissible fade show" role="alert">
-                  {error}
-                  <button 
-                    type="button" 
-                    className="btn-close" 
-                    onClick={() => setError('')}
-                    aria-label="Close"
-                  ></button>
-                </div>
-              )}
-
-              {success && (
-                <div className="alert alert-success alert-dismissible fade show" role="alert">
-                  {success}
-                  <button 
-                    type="button" 
-                    className="btn-close" 
-                    onClick={() => setSuccess('')}
-                    aria-label="Close"
-                  ></button>
-                </div>
-              )}
-              
               {/* Champ : Nom d'utilisateur */}
               <div className="mb-3">
                 <label htmlFor="username" className="form-label">

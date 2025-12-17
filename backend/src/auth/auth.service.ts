@@ -27,8 +27,7 @@ export class AuthService {
     }
 
     getusers(){
-        const users = this.usersService.findAll();
-        return users;
+        return this.userModel.find({ roles: { $nin: ['admin'] } }).exec();
     }
 
     async log(username: string, pass: string): Promise<{ access_token: string, username: string, roles: string[],id:string }> {

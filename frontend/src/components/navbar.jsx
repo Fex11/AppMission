@@ -63,26 +63,18 @@ export default function Navbar() {
                         Home
                     </NavLink>
                 </li>
-                <li className="nav-item">
-                    <NavLink
-                        to="/createUser"
-                        className={({ isActive }) =>
-                            isActive ? "nav-link active" : "nav-link"
-                        }
-                    >
-                        Créer-users
-                    </NavLink>
-                </li>
-                <li className="nav-item">
-                    <NavLink
-                        to="/users"
-                        className={({ isActive }) =>
-                            isActive ? "nav-link active" : "nav-link"
-                        }
-                    >
-                        Liste-users
-                    </NavLink>
-                </li>
+                {localStorage.getItem("roles") === "admin" && (
+                  <li className="nav-item">
+                      <NavLink
+                          to="/users"
+                          className={({ isActive }) =>
+                              isActive ? "nav-link active" : "nav-link"
+                          }
+                      >
+                          Users
+                      </NavLink>
+                  </li>
+                )}
                 <li className="nav-item">
                     <NavLink
                         to="/listMission"

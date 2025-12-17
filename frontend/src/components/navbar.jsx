@@ -58,12 +58,12 @@ export default function Navbar() {
                 </li>
                 <li className="nav-item">
                     <NavLink
-                        to="/createMission"
+                        to="/listMission"
                         className={({ isActive }) =>
                             isActive ? "nav-link active" : "nav-link"
                         }
                     >
-                        Creer Mission
+                        Missions
                     </NavLink>
                 </li>
             </ul>

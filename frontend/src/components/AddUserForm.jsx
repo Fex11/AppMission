@@ -44,7 +44,7 @@ const AddUserForm = () => {
         headers: {
           'Content-Type': 'application/json',
           // Si vous avez un token d'authentification, ajoutez-le ici
-          // 'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify(dataToSend)
       });
@@ -84,7 +84,7 @@ const AddUserForm = () => {
       
       <div className="container mt-5">
         <div className="card shadow-sm">
-          <div className="card-header bg-primary text-white">
+          <div className="card-header bg-black text-white">
             <h3 className="mb-0">Ajouter un Nouvel Utilisateur</h3>
           </div>
           <div className="card-body">

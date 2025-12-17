@@ -15,8 +15,7 @@ export class CreerUserDto {
   @IsString()
   email!: string;
 
-  @Transform(({ value }) => value?.trim())
-  @IsString()
+  @IsNotEmpty()
   roles!: [];
 
 

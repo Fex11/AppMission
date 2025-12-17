@@ -10,6 +10,8 @@ import { AuthGuard } from './guard/auth.guard';
 export class AuthController {
     constructor(private authService: AuthService) {}
 
+    @UseGuards(AuthGuard,RolesGuard)
+    @Roles(Role.Admin)
     @Post("/create")
     creer(@Body() dto: CreerUserDto) {
         return this.authService.creer(dto);
@@ -18,6 +20,11 @@ export class AuthController {
     @Post("/login")
     login(@Body() signInDto: Record<string, any>) {
         return this.authService.log(signInDto.username,signInDto.password);
+    }
+
+    @Get("/users")
+    getUsers(){
+        return this.authService.getusers();
     }
     
     @UseGuards(AuthGuard,RolesGuard)

@@ -1,30 +1,64 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { ErrorContext } from '../context/ErrorContext';
 
-const AddMissionForm = () => {
+const UpdateMissionForm = () => {
+  const { id } = useParams(); // id de la mission
+  const navigate = useNavigate();
+  const { showError, showSuccess } = useContext(ErrorContext);
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     status: "pending",
     assignedTo: "",
   });
-  const navigate = useNavigate();
-  const { showError, showSuccess } = useContext(ErrorContext);
-  const [users, setUsers] = useState([]);
 
-  // 🔹 Récupérer les utilisateurs depuis l'API
+  const [mission, setMission] = useState({});
+
+  const [users, setUsers] = useState([]);
+  const token = localStorage.getItem("token");
+
+  /* 🔹 Charger la mission existante */
+  useEffect(() => {
+    const fetchMission = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/missions/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!res.ok) {
+            // Essaye de parser le corps JSON pour récupérer le message d'erreur
+            const errorData = await res.json();
+            throw new Error(errorData.message || "Erreur inconnue du serveur");
+        }
+        const data = await res.json();
+        setMission(data)
+        setFormData({
+          title: data.title || "",
+          description: data.description || "",
+          status: data.status || "pending",
+          assignedTo: data.assignedTo?._id || data.assignedTo || "",
+        });
+      } catch (error) {
+        showError(error)
+      }
+    };
+
+    fetchMission();
+  }, [id, token]);
+
+  /* 🔹 Charger les users */
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem("token"); // si API protégée
         const res = await fetch("http://localhost:3000/auth/users", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) {
-          // Essaye de parser le corps JSON pour récupérer le message d'erreur
-          const errorData = await res.json();
-          throw new Error(errorData.message || "Erreur inconnue du serveur");
+            // Essaye de parser le corps JSON pour récupérer le message d'erreur
+            const errorData = await res.json();
+            throw new Error(errorData.message || "Erreur inconnue du serveur");
         }
         const data = await res.json();
         setUsers(data);
@@ -32,21 +66,23 @@ const AddMissionForm = () => {
         showError(error);
       }
     };
-    fetchUsers();
-  }, []);
 
+    fetchUsers();
+  }, [token]);
+
+  /* 🔹 Gestion des changements */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  /* 🔹 Soumission update */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const token = localStorage.getItem("token"); // si API protégée
-      const res = await fetch("http://localhost:3000/missions/creating-mission", {
-        method: "POST",
+      const res = await fetch(`http://localhost:3000/missions/${id}`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -55,22 +91,13 @@ const AddMissionForm = () => {
       });
 
       if (!res.ok) {
-        // Lire le corps de la réponse pour obtenir le message d'erreur
-        const errorData = await res.json(); // ou res.text() selon ton API
-        throw new Error(errorData.message || "Erreur inconnue");
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Erreur update");
       }
-        const data = await res.json();
-        console.log("Mission créée :", data);
-        setFormData({
-          title: "",
-          description: "",
-          status: "pending",
-          assignedTo: "",
-      });
-      showSuccess("Mission crée");
+    showSuccess("Modification reussi");
       navigate("/listMission");
     } catch (error) {
-      showError(error);
+      showError(error)
     }
   };
 
@@ -81,7 +108,7 @@ const AddMissionForm = () => {
 
           <div className="card shadow-sm">
             <div className="card-body">
-              <h4 className="mb-4 text-center">Ajouter une mission</h4>
+              <h4 className="mb-4 text-center">Modifier la mission</h4>
 
               <form onSubmit={handleSubmit}>
 
@@ -107,17 +134,22 @@ const AddMissionForm = () => {
                     rows="3"
                     value={formData.description}
                     onChange={handleChange}
-                    required
                   />
                 </div>
 
-                {/* STATUS (readonly) */}
+                {/* STATUS */}
                 <div className="mb-3">
                   <label className="form-label">Statut</label>
-                  <select className="form-select" disabled>
+                  <select
+                    className="form-select"
+                    name="status"
+                    value={formData.status}
+                    onChange={handleChange}
+                  >
                     <option value="pending">En attente</option>
+                    <option value="in_progress">En cours</option>
+                    <option value="completed">Terminée</option>
                   </select>
-                  <input type="hidden" name="status" value="pending" />
                 </div>
 
                 {/* ASSIGNED TO */}
@@ -128,7 +160,6 @@ const AddMissionForm = () => {
                     name="assignedTo"
                     value={formData.assignedTo}
                     onChange={handleChange}
-                    required
                   >
                     <option value="">-- Sélectionner un utilisateur --</option>
                     {users.map((u) => (
@@ -139,13 +170,24 @@ const AddMissionForm = () => {
                   </select>
                 </div>
 
+                {/* INFOS LECTURE SEULE */}
+                <div className="mb-3 text-muted">
+                  <small>
+                    Créée le : {new Date(mission.createdAt).toLocaleString()}
+                  </small>
+                </div>
+
                 {/* BOUTONS */}
                 <div className="d-flex justify-content-end gap-2">
-                  <button type="reset" className="btn btn-outline-secondary">
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={() => navigate("/listMission")}
+                  >
                     Annuler
                   </button>
                   <button type="submit" className="btn btn-primary">
-                    Enregistrer
+                    Mettre à jour
                   </button>
                 </div>
 
@@ -159,4 +201,4 @@ const AddMissionForm = () => {
   );
 };
 
-export default AddMissionForm;
+export default UpdateMissionForm;

@@ -26,6 +26,11 @@ export class AuthService {
         return user.save();
     }
 
+    getusers(){
+        const users = this.usersService.findAll();
+        return users;
+    }
+
     async log(username: string, pass: string): Promise<{ access_token: string, username: string, roles: string[],id:string }> {
         const user = await this.usersService.findByusername(username);
         if (!user) {

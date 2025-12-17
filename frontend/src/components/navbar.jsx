@@ -53,7 +53,17 @@ export default function Navbar() {
                             isActive ? "nav-link active" : "nav-link"
                         }
                     >
-                        Creer User
+                        Créer-users
+                    </NavLink>
+                </li>
+                <li className="nav-item">
+                    <NavLink
+                        to="/users"
+                        className={({ isActive }) =>
+                            isActive ? "nav-link active" : "nav-link"
+                        }
+                    >
+                        Liste-users
                     </NavLink>
                 </li>
                 <li className="nav-item">
@@ -70,7 +80,7 @@ export default function Navbar() {
 
             {/* MENU DROITE */}
             <ul className="navbar-nav ms-auto">
-
+            
               {/* DROPDOWN UTILISATEUR */}
               <li className="nav-item dropdown">
                 <span

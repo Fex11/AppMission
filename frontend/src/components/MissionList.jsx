@@ -198,7 +198,8 @@ export default function MissionsList() {
         className=" mb-3 p-3 bg-white rounded"
         style={{
           border: "1px solid #dee2e6", // bordure grise claire
-          boxShadow: "0 2px 6px rgba(0,0,0,0.1)" // ombre subtile
+          boxShadow: "0 2px 6px rgba(0,0,0,0.1)", // ombre subtile
+          width: "auto"     
         }}
       >
         <div className="d-flex justify-content-between align-items-center mb-3">

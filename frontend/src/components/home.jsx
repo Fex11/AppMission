@@ -1,9 +1,12 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import { 
-  PieChart, Pie, Cell, ResponsiveContainer, 
-  BarChart, Bar, XAxis, YAxis, Tooltip, Legend 
+import React, { useContext, useEffect, useState } from 'react';
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis, YAxis
 } from 'recharts';
+import { AuthContext } from '../context/AuthContext';
 
 export default function Home() {
   const { user } = useContext(AuthContext);
@@ -18,8 +21,9 @@ export default function Home() {
       try {
         // RÉCUPÉRATION DU TOKEN (Indispensable pour passer le AuthGuard)
         const token = localStorage.getItem('token'); 
-
-        const response = await fetch(`http://localhost:3000/missions/filtered?limit=100`, {
+        let url="http://localhost:3000/missions/filtered?limit=100";
+        if(localStorage.getItem("id") && localStorage.getItem("roles")=="agent") url=url+`&assignedTo=${localStorage.getItem("id")}`
+        const response = await fetch(url, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -74,23 +78,27 @@ export default function Home() {
 
       {/* --- CARTES DE RÉSUMÉ --- */}
       <div className="row g-3 mb-4">
+      {localStorage.getItem("roles") === "admin" && (
         <div className="col-md-6">
           <div className="card border-0 shadow-sm bg-light p-3">
             <small className="text-muted text-uppercase fw-bold" style={{ fontSize: '0.7rem' }}>Total Missions en base</small>
             <h2 className="display-6 mb-0 text-dark opacity-75">{stats.total}</h2>
           </div>
         </div>
+      )}
+      {localStorage.getItem("roles") === "agent" && (
         <div className="col-md-6">
-          <div className="card border-0 shadow-sm bg-white border-start border-secondary border-4 p-3">
+          <div className="card border-0 shadow-sm bg-light border-start border-secondary border-4 p-3">
             <small className="text-muted text-uppercase fw-bold" style={{ fontSize: '0.7rem' }}>Mes Missions</small>
             <h2 className="display-6 mb-0 text-secondary">{stats.myMissions}</h2>
           </div>
         </div>
+      )}
       </div>
 
       {/* --- GRAPHIQUES --- */}
       <div className="row g-4">
-        <div className="col-lg-6">
+        {/*<div className="col-lg-6">
           <div className="card border-0 shadow-sm p-4 h-100">
             <h6 className="text-secondary fw-bold mb-4">Missions par statut</h6>
             <div style={{ width: '100%', height: 250 }}>
@@ -107,7 +115,7 @@ export default function Home() {
               </ResponsiveContainer>
             </div>
           </div>
-        </div>
+          </div>*/}
 
         <div className="col-lg-6">
           <div className="card border-0 shadow-sm p-4 h-100">

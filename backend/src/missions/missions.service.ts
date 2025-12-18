@@ -19,7 +19,7 @@ export class MissionsService {
   async findAll(): Promise<Mission[]> {
     return this.missionModel
       .find()
-      .populate('assignedTo')  // remplace l'_id par l'objet User complet
+      .populate('assignedTo') // remplace l'_id par l'objet User complet
       .exec();
   }
 

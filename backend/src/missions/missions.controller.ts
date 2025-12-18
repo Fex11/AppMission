@@ -19,7 +19,7 @@ export class MissionsController {
   }
 
   @UseGuards(AuthGuard)
-  @Get("/filtered")
+  @Get('/filtered')
   async findFiltered(
     @Query('status') status?: string,
     @Query('assignedTo') assignedTo?: string,

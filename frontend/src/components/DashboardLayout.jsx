@@ -9,6 +9,8 @@ import MissionsList from "./MissionList";
 import UpdateMissionForm from "./UpdateMissionForm ";
 import Navbar from "./navbar";
 import UsersList from "./UsersList";
+import Profile from "./profile";
+
 
 export default function DashboardLayout() {
   const { user,loading } = useContext(AuthContext);
@@ -20,7 +22,7 @@ export default function DashboardLayout() {
   if (!user.isLoggedIn) {
     return <Navigate to="/login" />;
   }
-
+  
   return (
     <>
       <Navbar />
@@ -61,6 +63,8 @@ export default function DashboardLayout() {
           <Route path="/listMission" element={<MissionsList />} />
           <Route path="/createMission" element={<AddMissionForm />} />
           <Route path="/updateMission/:id" element={<UpdateMissionForm />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
       </div>
     </>

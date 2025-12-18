@@ -98,13 +98,13 @@ export default function Navbar() {
                         <span
                             className="dropdown-item"
                             style={{ cursor: "pointer" }}
-                            onClick={() => navigate("/profil")}
+                            onClick={() => navigate("/profile")}
                         >
                             Profil
                         </span>
                     </li>
                     <li><hr className="dropdown-divider" /></li>
-
+                    
                     <li>
                         <span className="dropdown-item text-danger" style={{ cursor: "pointer" }} onClick={deco}>
                         Déconnexion

@@ -4,10 +4,10 @@ import { AuthContext } from "../context/AuthContext";
 import { ErrorContext } from "../context/ErrorContext";
 import AddMissionForm from "./AddMissionForm";
 import AddUserForm from "./AddUserForm";
-import Home from "./Home";
 import MissionsList from "./MissionList";
 import UpdateMissionForm from "./UpdateMissionForm ";
 import UsersList from "./UsersList";
+import Home from "./home";
 import Navbar from "./navbar";
 import Profile from "./profile";
 

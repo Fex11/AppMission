@@ -22,6 +22,7 @@ export class AuthController {
         return this.authService.log(signInDto.username,signInDto.password);
     }
 
+    @UseGuards(AuthGuard)
     @Get("/users")
     getUsers(){
         return this.authService.getusers();

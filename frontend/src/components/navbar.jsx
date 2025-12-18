@@ -1,16 +1,33 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import socket from "../utils/socket";
 
 
 export default function Navbar() {
     const navigate = useNavigate();
     const { logout,user } = useContext(AuthContext);
+    const [notifCount, setNotifCount] = useState(0);
+
 
     const deco = () =>{
         logout();
         navigate("/login");
     }
+
+    useEffect(() => {
+      const handleNewMission = (mission) => {
+        console.log("Mission créée :", mission);
+        setNotifCount((prev) => prev + 1);
+      };
+    
+      socket.on("new-mission", handleNewMission);
+    
+      return () => {
+        socket.off("new-mission", handleNewMission);
+      };
+    }, []);
+    
 
   return (
     <>
@@ -46,26 +63,18 @@ export default function Navbar() {
                         Home
                     </NavLink>
                 </li>
-                <li className="nav-item">
-                    <NavLink
-                        to="/createUser"
-                        className={({ isActive }) =>
-                            isActive ? "nav-link active" : "nav-link"
-                        }
-                    >
-                        Créer-users
-                    </NavLink>
-                </li>
-                <li className="nav-item">
-                    <NavLink
-                        to="/users"
-                        className={({ isActive }) =>
-                            isActive ? "nav-link active" : "nav-link"
-                        }
-                    >
-                        Liste-users
-                    </NavLink>
-                </li>
+                {localStorage.getItem("roles") === "admin" && (
+                  <li className="nav-item">
+                      <NavLink
+                          to="/users"
+                          className={({ isActive }) =>
+                              isActive ? "nav-link active" : "nav-link"
+                          }
+                      >
+                          Users
+                      </NavLink>
+                  </li>
+                )}
                 <li className="nav-item">
                     <NavLink
                         to="/listMission"
@@ -80,7 +89,37 @@ export default function Navbar() {
 
             {/* MENU DROITE */}
             <ul className="navbar-nav ms-auto">
-            
+              {/* Notification */}
+              {localStorage.getItem("roles")==="agent" && (
+              <li className="nav-item me-3 position-relative">
+                <span
+                  className="nav-link"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    navigate("/listMission");
+                    setNotifCount(0); // reset quand on clique
+                  }}
+                >
+                  <i className="bi bi-bell" style={{ fontSize: "20px" }}></i>
+
+                  {notifCount > 0 && (
+                    <span
+                      className="badge rounded-pill bg-danger"
+                      style={{
+                        position: "absolute",
+                        top: "2px",       // légèrement en dessous du bord supérieur
+                        right: "0px",     // collé au bord droit de l'icône
+                        fontSize: "0.65rem",
+                        padding: "0.25em 0.4em",
+                      }}
+                    >
+                      {notifCount}
+                    </span>
+                  )}
+                </span>
+              </li>
+              )}
+
               {/* DROPDOWN UTILISATEUR */}
               <li className="nav-item dropdown">
                 <span
